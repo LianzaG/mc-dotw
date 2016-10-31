@@ -1,0 +1,14 @@
+{
+    "name": "lianzadev/mc-dotw",
+    "description": "A Wordpress plugin to create a well-organized weekly promotion system for WooCommerce products.",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Julien Bosuma",
+            "email": "jbosuma@gmail.com"
+        }
+    ],
+    "require": {
+        "yohang/calendr": "^2.0"
+    }
+}

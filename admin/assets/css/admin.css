@@ -1,0 +1,67 @@
+/* This stylesheet is used to style the admin option form of the plugin. */
+.inside a {
+	text-decoration: none;
+}
+.inside a.muted {
+	color: #999;
+}
+.inside a.muted:hover {
+	color: #333;
+}
+.inside a.dotw-nav-current {
+	font-size: 1.4em;
+}
+.inside a.dotw-nav-blank {
+	color: darkred;
+}
+.inside a.dotw-nav-inactive {
+	color: orange;
+}
+.dotw_wc_data.dotw_prices {
+	padding: 5px;
+	background: #272729;
+}
+.dotw_wc_data.dotw_period {
+	padding: 5px;
+	background: #dcdcdc;
+}
+.dotw_wc_data.dotw_prices .description {
+	color: #dcdcdc;
+}
+
+::-webkit-input-placeholder {
+   color: #bbb;
+   text-transform: italic;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: #bbb;
+   text-transform: italic;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #bbb;
+   text-transform: italic;
+}
+
+:-ms-input-placeholder {
+   color: #bbb;
+   text-transform: italic;
+}
+
+select#dotw_deals_endofweek_offset {
+    width: 100%;
+}
+
+input[type=number] {
+    width: 159px;
+}
+
+#dotw_deals_form .ui-accordion-content {
+    border: 5px solid;
+    background: whitesmoke;
+}
+
+.ui-accordion-header-active {
+	background: whitesmoke;
+}

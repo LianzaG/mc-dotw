@@ -1,0 +1,230 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: mc-dotw 1.0.0\n"
+"POT-Creation-Date: 2016-10-31 16:35+0100\n"
+"PO-Revision-Date: 2016-10-31 16:42+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
+"esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;"
+"esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: ..\n"
+
+#: ../admin/class-mc-dotw-admin.php:183
+msgid "MC Dotw Settings"
+msgstr "MC Dotw - Configuration"
+
+#: ../admin/class-mc-dotw-admin.php:184
+msgid "MC Dotw"
+msgstr "MC Dotw"
+
+#: ../admin/class-mc-dotw-admin.php:229
+msgid "Settings"
+msgstr "Configuration"
+
+#: ../admin/includes/class-mc-dotw-admin-ajax.php:67
+msgctxt "Deals Admin: no AJAX search result"
+msgid "No products found"
+msgstr "Aucun produit trouvé"
+
+#: ../admin/includes/class-mc-dotw-admin-wc-custom-fields.php:50
+msgid "This product is not linked."
+msgstr "Ce produit n’est lié à aucun deal de la semaine."
+
+#: ../admin/includes/class-mc-dotw-admin-wc-custom-fields.php:55
+msgid "Deal of the Week #"
+msgid_plural "Deals of the Week #"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../admin/includes/class-mc-dotw-admin-wc-custom-fields.php:58
+msgid ""
+"This read-only field allows you to monitor the product's deal of the week "
+"associations. Values entered here won't be saved."
+msgstr ""
+"Ce champ vous permet d’avoir un oeil sur le lien existant entre un "
+"produit et une promo de la semaine qui y serait éventuellement associée. "
+"Il est présent à titre d’info et les valeurs qui y sont insérées ne sont "
+"pas enregistrées lors de la soumission du formulaire !"
+
+#: ../admin/views/admin-deal-aside-wrapper.php:37
+msgid "Related deal:"
+msgid_plural "Related deals:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../admin/views/admin-deal-aside-wrapper.php:45
+msgid "Usual sale price: "
+msgstr "Prix promo habituel :"
+
+#: ../admin/views/admin-deal-aside-wrapper.php:46
+msgctxt "No price"
+msgid "None"
+msgstr "Aucun"
+
+#: ../admin/views/admin-deal-aside-wrapper.php:49
+msgid "Usual sale start date: "
+msgstr "Date habituelle de début de promo :"
+
+#: ../admin/views/admin-deal-aside-wrapper.php:50
+#: ../admin/views/admin-deal-aside-wrapper.php:54
+msgctxt "No date"
+msgid "None"
+msgstr "Aucune"
+
+#: ../admin/views/admin-deal-aside-wrapper.php:53
+msgid "Usual sale end date: "
+msgstr "Date habituelle de fin de promo :"
+
+#: ../admin/views/admin.php:29
+msgid "MC | Deal Of The Week"
+msgstr "MC | Deal Of The Week "
+
+#: ../admin/views/admin.php:42 ../admin/views/admin.php:161
+msgid "Click to toggle"
+msgstr "Cliquer pour basculer"
+
+#: ../admin/views/admin.php:45
+msgid "Edition Panels: Manage deals"
+msgstr "Panneaux d’édition : gérer les deals"
+
+#: ../admin/views/admin.php:97
+msgid "Jump to"
+msgstr "Défiler jusqu’à"
+
+#: ../admin/views/admin.php:107
+#: ../public/includes/class-mc-dotw-shortcode.php:96
+msgid "Week"
+msgstr "Semaine"
+
+#: ../admin/views/admin.php:107
+msgctxt "Time period end date"
+msgid "to"
+msgstr "au"
+
+#: ../admin/views/admin.php:115
+msgid "Deal: enter an instrument's name…"
+msgstr "Deal : insérer le nom (modèle) d’un produit…"
+
+#: ../admin/views/admin.php:118
+msgid "Hot Deal's Price"
+msgstr "Prix du deal de la semaine"
+
+#: ../admin/views/admin.php:126
+msgid "Regular Price"
+msgstr "Prix normal"
+
+#: ../admin/views/admin.php:127
+msgid "Sale Price"
+msgstr "Prix promo"
+
+#: ../admin/views/admin.php:129
+msgid "From"
+msgstr "Du"
+
+#: ../admin/views/admin.php:129
+msgid "Date from"
+msgstr "Date de début"
+
+#: ../admin/views/admin.php:130
+msgid "To"
+msgstr "au"
+
+#: ../admin/views/admin.php:130
+msgid "Date to"
+msgstr "Date de fin"
+
+#: ../admin/views/admin.php:140
+msgid "Save changes"
+msgstr "Enregistrer les changements"
+
+#: ../admin/views/admin.php:165
+msgid "Navigation & Global Settings"
+msgstr "Navigation & réglages généraux"
+
+#: ../admin/views/admin.php:171
+msgid "Weeks"
+msgstr "Semaines"
+
+#: ../admin/views/admin.php:171
+msgid "Quick Nav"
+msgstr "Quick Nav"
+
+#: ../admin/views/admin.php:175
+msgid "End Of The Deal"
+msgstr "La fin du deal"
+
+#: ../admin/views/admin.php:177
+msgid "The day of the week on which all deals should end."
+msgstr ""
+"Le jour de la semaine où les deals de la semaine doivent se terminer."
+
+#: ../admin/views/admin.php:179
+msgid "Wednesday"
+msgstr "Mercredi"
+
+#: ../admin/views/admin.php:180
+msgid "Thursday"
+msgstr "Jeudi"
+
+#: ../admin/views/admin.php:181
+msgid "Friday"
+msgstr "Vendredi"
+
+#: ../admin/views/admin.php:182
+msgid "Saturday"
+msgstr "Samedi"
+
+#: ../admin/views/admin.php:183
+msgid "Sunday"
+msgstr "Dimanche"
+
+#: ../admin/views/widget-fields.php:10
+msgid "Title"
+msgstr "Titre"
+
+#: ../public/includes/class-mc-dotw-shortcode.php:82
+msgctxt "Price"
+msgid "at"
+msgstr "à"
+
+#: ../public/includes/class-mc-dotw-shortcode.php:82
+msgctxt "Sale price"
+msgid "instead of"
+msgstr "au lieu de"
+
+#: ../public/includes/class-mc-dotw-shortcode.php:86
+msgctxt "Time period start date"
+msgid "From "
+msgstr "Du"
+
+#: ../public/includes/class-mc-dotw-shortcode.php:86
+msgctxt "Time period end date"
+msgid "until"
+msgstr "au"
+
+#: ../public/includes/class-mc-dotw-shortcode.php:119
+msgctxt "Deal of the week: Blank Title"
+msgid "Coming Soon!"
+msgstr "Prochainement !"
+
+#: ../public/includes/class-mc-dotw-shortcode.php:120
+msgid "Discover our next hot deal of the week"
+msgstr "Découvrez la prochaine méga promo au programme"
+
+#: ../public/includes/class-mc-dotw-shortcode.php:131
+msgid "No more deals of the week scheduled for this year (…so far)! "
+msgstr ""
+"Pour l’instant, pas deal de la semaine programmé pour le reste de "
+"l’année… Revenez-donc jeter un coup d’oeil, ici, d’ici peu ! Les prix du "
+"marché bougent en permanence."
