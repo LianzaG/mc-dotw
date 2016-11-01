@@ -32,15 +32,22 @@ if ( ! defined( 'WPINC' ) ) {
 setlocale(LC_TIME, get_locale() );
 date_default_timezone_set( get_option('timezone_string') );
 
-// Include the plugin dependencies autoloader.
+// Include vendor dependencies autoloader.
 require( 'vendor/autoload.php');
+// Include shared/admin/public class definitions.
+require_once( plugin_dir_path( __FILE__ ) . '/includes/class-mc-dotw-deal.php' );
+require_once( plugin_dir_path( __FILE__ ) . '/includes/class-mc-dotw-product.php' );
+require_once( plugin_dir_path( __FILE__ ) . '/admin/includes/class-mc-dotw-admin-ajax.php' );
+require_once( plugin_dir_path( __FILE__ ) . '/admin/includes/class-mc-dotw-admin-cron.php' );
+require_once( plugin_dir_path( __FILE__ ) . '/admin/includes/class-mc-dotw-admin-wc-custom-fields.php' );
+require_once( plugin_dir_path( __FILE__ ) . '/admin/includes/class-mc-dotw-admin-widget.php' );
+require_once( plugin_dir_path( __FILE__ ) . '/public/includes/class-mc-dotw-shortcode.php' );
 
 /*----------------------------------------------------------------------------*
  * Public-Facing Functionality
  *----------------------------------------------------------------------------*/
 
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-mc-dotw.php' );
-
 /*
  * Register hooks that are fired when the plugin is activated or deactivated.
  * When the plugin is deleted, the uninstall.php file is loaded.
@@ -57,18 +64,17 @@ add_action( 'plugins_loaded', array( 'MC_Dotw', 'get_instance' ) );
 /*
  * @TODO:
  *
- * If you want to include Ajax within the dashboard, change the following
+ * If you don't want to include Ajax within the dashboard anymore, change the following
  * conditional to:
  *
- * if ( is_admin() ) {
- *   ...
+ * if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+ *    ...
  * }
  *
- * The code below is intended to to give the lightest footprint possible.
+ * The conditional above is intended to give the lightest footprint possible.
  */
-if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-
+if ( is_admin() ) {
 	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-mc-dotw-admin.php' );
-	add_action( 'plugins_loaded', array( 'MC_Dotw_Admin', 'get_instance' ) );
 
+	add_action( 'plugins_loaded', array( 'MC_Dotw_Admin', 'get_instance' ) );
 }

@@ -2,6 +2,7 @@
 	"use strict";
 
 	$j(function () {
+		console.log('Loadd');
 		/*
 	     * Trigger suggest.js AJAX autocomplete on selected DOM elements:
 	     * autocomplete a week's deal product selection field with suggestions
@@ -37,7 +38,7 @@
 	              , product_id   = response.product_id;
 
 	            // We won't store the selection as JSON so, now that the info was retrieved and parsed,
-	            // we can set $j( this ) value to the title of the selected product.
+	            // we can set the value of $j( this ) to the title of the selected product.
 	            $j( this ).attr( 'value', title );
 	            // Insert product_id inside the form.
 	            $j('#' + id + '_product_id').attr('value', product_id);

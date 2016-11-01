@@ -454,7 +454,10 @@ Class MC_Dotw_Deal {
 		$date_from = $date_from__from_wcmeta;
 		$date_to   = $date_to__from_wcmeta;
 
-		// Add/remove FALSE to condition to display hide/show backedup dates.
+		/**
+		 * Add or remove FALSE to this conditional in order display hide or show the deal's
+		 * backed up original sale dates.
+		 */
 		if ( false && $this->has_product_active_elsewhere() ) {
 			$date_from = $date_from__from_deal;
 			$date_to   = $date_to__from_deal;

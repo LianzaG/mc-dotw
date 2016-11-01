@@ -68,8 +68,8 @@ class MC_Dotw_Admin
 		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
 
 		// Add custom functionality actions and filters.
-		$this->load_files();
 		add_action( 'dotw_before_admin_page_display', array( $this, 'save_admin_form' ) );
+		add_action( 'init', array( $this, 'init_includes' ) );
 		// add_filter( '@TODO', array( $this, 'filter_method_name' ) );
 	}
 
@@ -195,12 +195,12 @@ class MC_Dotw_Admin
 	 *
 	 * @return   void
 	 */
-	protected function load_files()
+	public function init_includes()
 	{
-		require_once( plugins_url( 'includes/class-mc-dotw-admin-ajax.php', __FILE__ ) );
-		require_once( plugins_url( 'includes/class-mc-dotw-admin-cron.php', __FILE__ ) );
-		require_once( plugins_url( 'includes/class-mc-dotw-admin-wc-custom-fields.php', __FILE__ ) );
-		require_once( plugins_url( 'includes/class-mc-dotw-admin-widget.php', __FILE__ ) );
+		// require_once( 'includes/class-mc-dotw-admin-ajax.php' );
+		// require_once( 'includes/class-mc-dotw-admin-cron.php' );
+		// require_once( 'includes/class-mc-dotw-admin-wc-custom-fields.php' );
+		// require_once( 'includes/class-mc-dotw-admin-widget.php' );
 
 		new MC_Dotw_Admin_Ajax();
 		new MC_Dotw_WC_Custom_Fields();
@@ -244,7 +244,7 @@ class MC_Dotw_Admin
      * @return   array     A populated 53 weeks deals collection,
      *                     updated with the submitted form data.
      */
-    protected function save_admin_form()
+    public function save_admin_form()
     {
     	// Check user access rights.
         if ( ! current_user_can('manage_options') ) {

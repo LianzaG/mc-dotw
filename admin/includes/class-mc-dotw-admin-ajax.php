@@ -27,7 +27,7 @@ class MC_Dotw_Admin_Ajax
         $this->plugin_slug = MC_Dotw::get_instance()->get_plugin_slug();
 
         add_action('wp_ajax_dotw_deals_suggest_options', array( $this, 'suggest_wc_products_options_list' ) );
-        add_action('wp_ajax_dotw_deals_option_meta', array( $this, 'send_selected_option_meta' ) );
+        add_action('wp_ajax_dotw_deals_option_meta',     array( $this, 'send_selected_option_meta' ) );
     }
 
     /**
@@ -50,7 +50,7 @@ class MC_Dotw_Admin_Ajax
             )
         );
 
-        if ( $loop->have_posts() ) : ?>
+        if ( $loop->have_posts() ) : echo 'tt' ;?>
             <datalist id="dotw_deals_suggest_list">
                 <?php while ( $loop->have_posts() ) : $loop->the_post();
                     $product = wc_get_product($loop->post->ID);
@@ -104,3 +104,4 @@ class MC_Dotw_Admin_Ajax
         wp_die();
     }
 }
+// new MC_Dotw_Admin_Ajax();

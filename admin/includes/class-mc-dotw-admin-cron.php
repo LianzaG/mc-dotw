@@ -53,7 +53,7 @@ Class MC_Dotw_Admin_Cron
     *
     * @return   MC_Dotw_Admin_Cron
     */
-   public static function getInstance()
+   public static function get_instance()
    {
      if ( is_null(self::$_instance) ) {
        self::$_instance = new MC_Dotw_Admin_Cron();

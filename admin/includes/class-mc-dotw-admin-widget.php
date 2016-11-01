@@ -40,7 +40,7 @@ class MC_Dotw_Widget extends WP_Widget
         extract( $args );
         $title  = apply_filters( 'dotw_widget_title', $instance['title'] );
 
-        require( plugins_url( $this->plugin_slug . '/public/views/widget-front-end.php' );
+        require( plugins_url( $this->plugin_slug . '/public/views/widget-front-end.php' ) );
     }
 
     /**
@@ -71,7 +71,7 @@ class MC_Dotw_Widget extends WP_Widget
             ? esc_attr( $instance['title'] )
             : '';
 
-        require( '../views/widget-fields.php');
+        require( '../views/widget-fields.php' );
     }
 }
 

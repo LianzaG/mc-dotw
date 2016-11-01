@@ -84,8 +84,7 @@ class MC_Dotw {
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-		$this->load_files();
-		// add_action( '@TODO', array( $this, 'action_method_name' ) );
+		add_action( 'init', array( $this, 'init_shortcode' ) );
 		// add_filter( '@TODO', array( $this, 'filter_method_name' ) );
 	}
 
@@ -357,18 +356,15 @@ class MC_Dotw {
 	}
 
 	/**
-	 * Include the plugin's public/shared class definitions.
+	 * Init plugin shortcode.
 	 *
 	 * @since    1.0.0
 	 *
 	 * @return   void
 	 */
-	protected function load_files()
+	public function init_shortcode()
 	{
-		require_once( plugins_url( $this->plugin_slug . '/includes/class-mc-dotw-deal.php' ) );
-		require_once( plugins_url( $this->plugin_slug . '/includes/class-mc-dotw-product.php' ) );
-		require_once( plugins_url( 'includes/class-mc-dotw-shortcode.php', __FILE__ ) );
-
+		// require_once( 'includes/class-mc-dotw-shortcode.php' );
 		new MC_Dotw_Shortcode();
 	}
 }

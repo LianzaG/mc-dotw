@@ -26,9 +26,9 @@ class MC_Dotw_Shortcode
         $plugin = MC_Dotw::get_instance();
         $this->plugin_slug = $plugin->get_plugin_slug();
 
-        add_shortcode( 'mc_dotw', array( $this, 'shortcode' ) );
+        add_shortcode( 'mc_dotw',               array( $this, 'shortcode' ) );
         add_shortcode( 'dotw_deal_of_the_week', array( $this, 'shortcode' ) );
-        add_shortcode( 'mc_dotw_inline', array( $this, 'shortcode_inline' ) );
+        add_shortcode( 'mc_dotw_inline',        array( $this, 'shortcode_inline' ) );
     }
 
     /**
