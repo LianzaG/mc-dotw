@@ -41,7 +41,8 @@ class MC_Dotw_WC_Custom_Fields
 		global $woocommerce, $post;
 
 		// Get the week numbers of all MC_Dotw_Deal's linked to this product.
-		$linked_deals_week_nums = get_product_by_id( $post->ID )->get( 'deal_nums' );
+		$linked_deals_week_nums = MC_Dotw_Product::get_product_by_id( $post->ID )->get( 'deal_nums' );
+
 		sort( $linked_deals_week_nums, SORT_NUMERIC );
 
 		// Set the [week_nums] custom field's text content.

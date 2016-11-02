@@ -28,7 +28,7 @@ class MC_Dotw {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.0.1';
+	const VERSION = '1.0.1';
 
 	/**
 	 * Number of weeks in a year (rounded up).

@@ -14,7 +14,7 @@
  * Plugin Name:       MC Dotw
  * Plugin URI:
  * Description:       A plugin to create a well-organized WooCommerce products weekly promotions system.
- * Version:           0.0.1
+ * Version:           1.0.1
  * Author:            Julien Bosuma
  * Author URI:        http://lianzadesign.com/
  * Text Domain:       mc-dotw

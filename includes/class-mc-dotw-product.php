@@ -17,14 +17,18 @@ Class MC_Dotw_Product {
 	/**
 	 * The product (post) ID.
 	 *
-	 * @var int
+	 * @since    1.0.0
+	 *
+	 * @var      int
 	 */
 	protected $id = 0;
 
 	/**
 	 * Stores the deals featuring this product.
 	 *
-	 * @var array
+	 * @since    1.0.0
+	 *
+	 * @var      array
 	 */
 	protected $deals = array();
 
@@ -32,7 +36,9 @@ Class MC_Dotw_Product {
 	 * Stores week number of the associated deal currently activated,
 	 * if there is any.
 	 *
-	 * @var int
+	 * @since    1.0.0
+	 *
+	 * @var      int
 	 */
 	protected $active_deal_num = 0;
 
@@ -52,6 +58,11 @@ Class MC_Dotw_Product {
 		}
 	}
 
+	/**
+	 * Set the product's post metadata.
+	 *
+	 * @since    1.0.0
+	 */
 	protected function _set_meta()
 	{
 		$this->meta = get_post_meta( $this->get_id() );
@@ -61,9 +72,11 @@ Class MC_Dotw_Product {
 	 * Set $this->$deals, an array of all the deals featuring this product.
 	 * Also, flag the activity status by storing potential active deal's week_num.
 	 *
-	 * @param   void
+	 * @since    1.0.0
 	 *
-	 * @return  void
+	 * @param    void
+	 *
+	 * @return   void
 	 */
 	private function _set_deals()
 	{
@@ -84,6 +97,17 @@ Class MC_Dotw_Product {
 		}
 	}
 
+	/**
+	 * Getter method.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @param    string  $key   (Required) Key of the object's attribute to get.
+	 * @param    array   $args  (Optional) Associative array of potential arguments to pass
+	 *                          to any underlying getter method. Default array().
+	 *
+	 * @return   mixed          The value of the requested object attribute.
+	 */
 	public function get( $key, $args=array() )
 	{
 		if ( ! strcmp( $key, 'id' ) ) {
@@ -110,21 +134,49 @@ Class MC_Dotw_Product {
 		}
 	}
 
+	/**
+	 * Get the product ID.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @return   integer    Post ID.
+	 */
 	public function get_id()
 	{
 		return $this->id;
 	}
 
+	/**
+	 * Get all the deals featuring this product.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @return   array    Array of deal dataset arrays.
+	 */
 	public function get_deals()
 	{
 		return $this->deals;
 	}
 
+	/**
+	 * Get the week numbers (IDs) of all deals referencing this product.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @return   array    Array of deals week numbers.
+	 */
 	public function get_deal_nums()
 	{
 		return array_keys( $this->get_deals() );
 	}
 
+	/**
+	 * Get the dataset of the active deal linked to this product if there is one.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @return   array    Associative array. The active deal's dataset. Default empty array.
+	 */
 	public function get_active_deal()
 	{
 		$active_deal_dataset = $this->get( 'active_deal_num' ) > 0
@@ -134,11 +186,28 @@ Class MC_Dotw_Product {
 		return $active_deal_dataset;
 	}
 
+	/**
+	 * Is this product referenced by any active deal?
+	 *
+	 * @since    1.0.0
+	 *
+	 * @return   bool    True or false.
+	 */
 	public function has_active_deal()
 	{
 		return (bool) count( $this->get_active_deal() );
 	}
 
+	/**
+	 * Get the datasets of the passed or future deals referencing this product.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @param    bool    $future  (Optional) Whether or not to show the future deals instead
+	 *                            of the passed ones. Default true.
+	 *
+	 * @return   array            Associative array. The time-filtered list of deals datasets.
+	 */
 	public function get_timefiltered_deals( $future=true )
 	{
 		$filtered = array();
@@ -159,9 +228,13 @@ Class MC_Dotw_Product {
 	/**
 	 * Get a new MC_Dotw_Product instance.
 	 *
-	 * @param   int     		$post_id  (Required) Post id of the Woocommerce product to reference.
+	 * @since      1.0.0
+	 * @deprecated 1.0.1 					  May be removed in any future major updates.
+	 *             							  Use 'new MC_Dotw_Product()' instead.
 	 *
-	 * @return  MC_Dotw_Product  	      MC_Dotw_Product instance.
+	 * @param      int     		    $post_id  (Required) Post ID of the Woocommerce product to reference.
+	 *
+	 * @return     MC_Dotw_Product  	      MC_Dotw_Product instance.
 	 */
 	public static function get_product_by_id( $post_id=0 )
 	{

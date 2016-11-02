@@ -70,7 +70,6 @@ class MC_Dotw_Admin
 		// Add custom functionality actions and filters.
 		add_action( 'dotw_before_admin_page_display', array( $this, 'save_admin_form' ) );
 		add_action( 'init', array( $this, 'init_includes' ) );
-		// add_filter( '@TODO', array( $this, 'filter_method_name' ) );
 	}
 
 	/**
@@ -311,16 +310,107 @@ class MC_Dotw_Admin
 	}
 
 	/**
-	 * NOTE:     Filters are points of execution in which WordPress modifies data
-	 *           before saving it or sending it to the browser.
+	 * Get a deal edition panel's aside HTML content.
 	 *
-	 *           Filters: http://codex.wordpress.org/Plugin_API#Filters
-	 *           Reference:  http://codex.wordpress.org/Plugin_API/Filter_Reference
+	 * This method shows the pertinent backed up info about a deal's product sale's settings,
+	 * in case the product's info has been temporarily modified by another deal of the week.
 	 *
-	 * @since    1.0.0
+	 * Alternatively, shows a preview of such info whenever the user
+	 * selects a new product for the deal.
+	 *
+	 * @since    1.0.1
+	 *
+	 * @param    MC_Dotw_Deal    $deal                  (Required) The edited deal of the week.
+	 * @param    bool            $is_selection_preview  (Optional) Whether or not the aside content is for
+	 *                                                  a selected product's preview. Default false.
+	 *
+	 * @return   string|null                            The deal's aside HTML content. Null if '$deal' is not valid.
 	 */
-	public function filter_method_name()
+	public function get_deal_aside_html( $deal, $is_selection_preview = false )
 	{
-		// @TODO: Define your filter hook callback here
+		if ( ! $deal instanceof MC_Dotw_Deal )
+			return;
+
+		$html    = '';
+		$product = $deal->get_the_product();
+
+		// If the deal is active or shares the product it promotes with one or more other deals.
+		if ( $deal->has_activity() || ( $product && count( $product->get_deals() ) > 1 ) ) {
+			$week_num = $deal->get( 'week_num' );
+
+			// If there is a product and A), it has more than 1 deal or, B), it's a new selection for the deal.
+			if ( $product && ( count( $product->get_deals() ) > 1 || $is_selection_preview) ) {
+				$nav_anchors            = array();
+
+				// Get all product deals, get potential week_num of any active deal other than $deal
+				// and associated to the product and, finally, get a filtered list of deals that does not
+				// include the looped $deal nor the potential other active deal.
+				// Then, add to displayed html if needed.
+				$product_deals          = $product->get_deals();
+				$elsewhere_active_num   = $deal->has_product_active_elsewhere()
+					? $product->get_active_deal()['week_num']
+					: 0;
+
+				ksort( $product_deals, SORT_NUMERIC );
+
+				// Set potential preview_backup update flag.
+				$i = 0;
+
+				foreach ( $product_deals as $deal_num => $deal_dataset ) {
+					$css = '';
+					$activity_text = '';
+
+					// For the active deal only.
+					if ( $deal_num == $elsewhere_active_num || ( $deal->is_active() && $deal_num == $week_num ) ) {
+						$css = ' class="dotw-nav-current"';
+						// $activity_text = ' (' . _x( 'Active', 'Deal Aside Wrapper: Deals list', $this->plugin_slug ) . ')';
+					}
+
+					// Populate the array of navigation anchors HTML string.
+					$nav_anchors[] = '<a href="#dotw_deals_' . ($deal_num-1) . '_title"' . $css . '>' . $deal_num . $activity_text . '</a>';
+
+					if ( $is_selection_preview && $i === 0 ) {
+						// Populate previewed deal's 'backup' _data with the newly selected product's original
+						// sale settings, found in the first (@see: $i) associated deal's dataset.
+						$preview_backup = array(
+							"regular_price" => $deal->get( 'regular_price' ),
+							"sale_price"    => $deal_dataset['backup']['sale_price'],
+							"date_from"     => $deal_dataset['backup']['date_from'],
+							"date_to"       => $deal_dataset['backup']['date_to']
+						);
+						$deal->set( 'backup', $preview_backup );
+					}
+					$i++;
+				}
+
+				if ( count( $nav_anchors ) ) {
+					$html .= '<p id="dotw_deal_' . esc_html( $week_num ) . '_related_deals">';
+					$html .= esc_html( _n( 'Related deal:', 'Related deals:', count( $nav_anchors ), $this->plugin_slug ) );
+					$html .= ' ' . implode( ', ', $nav_anchors );
+					$html .= '</p>';
+				}
+			}
+
+			// Maybe get the HTML content for the product's original sale settings.
+			if ( $deal->has_activity() && ( ! $deal->is_blank() || $is_selection_preview ) ) {
+				$sale_price_text = $deal->get( 'sale_price' )
+					? __( 'Usual sale price: ', $this->plugin_slug ) . $deal->get( 'sale_price' ) . ' ' . get_woocommerce_currency_symbol()
+					: _x( 'None', 'No price', $this->plugin_slug );
+
+				$date_from_text  = $deal->get( 'date_from' )
+					? __( 'Usual sale start date: ', $this->plugin_slug ) . $deal->get( 'date_from' )
+					: __( 'Usual sale start date: ', $this->plugin_slug ) . _x( 'None', 'No date', $this->plugin_slug );
+
+				$date_to_text    = $deal->get( 'date_to' )
+					? __( 'Usual sale end date: ', $this->plugin_slug ) . $deal->get( 'date_to' )
+					: __( 'Usual sale end date: ', $this->plugin_slug ) . _x( 'None', 'No date', $this->plugin_slug );
+
+				$html .= '<p id="dotw_deal_' . esc_html( $week_num ) . '_usual_sale_price">'     . esc_html( $sale_price_text ) . '</p>';
+				$html .= '<p id="dotw_deal_' . esc_html( $week_num ) . '_usual_sale_date_from">' . esc_html( $date_from_text )  . '</p>';
+				$html .= '<p id="dotw_deal_' . esc_html( $week_num ) . '_usual_sale_date_to">'   . esc_html( $date_to_text )    . '</p>';
+			}
+		}
+
+		return $html;
 	}
 }

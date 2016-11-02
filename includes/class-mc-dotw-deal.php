@@ -97,14 +97,19 @@ Class MC_Dotw_Deal {
 	 *
 	 * @since   1.0.0
 	 *
-	 * @param   void
+	 * @param   integer    $id    (Optional) Product post id. If provided,
+	 *                            this will override any product set for
+	 *                            the deal with the one passed as argument.
+	 *                            Default to the deal's product if it has one.
 	 *
 	 * @return  void
 	 */
-	private function _set_product()
+	private function _set_product( $id = 0 )
 	{
-		if ( ! $this->is_blank() ) {
-			$this->product = MC_Dotw_Product::get_product_by_id( $this->get( 'product_id' ) );
+		$id = (int) $id ? : $this->get( 'product_id' );
+
+		if ( $id  || ! $this->is_blank() ) {
+			$this->product = MC_Dotw_Product::get_product_by_id( $id );
 		}
 	}
 
@@ -125,6 +130,8 @@ Class MC_Dotw_Deal {
 		if ( $valid_input ) {
 			if ( in_array( $key, array( 'regular_price', 'sale_price', 'date_from', 'date_to' ) ) ) {
 				$this->_data['backup'][$key] = $valid_input;
+			} elseif ( ! strcmp( $key, 'product' ) ) {
+				$this->product = $valid_input;
 			} else {
 				$this->_data[$key] = $valid_input;
 			}
@@ -443,7 +450,7 @@ Class MC_Dotw_Deal {
 	 *                             'date_from' & 'date_to' => values to display
 	 *                             'is_backup'
 	 */
-	public function get_optionsform_datefields_val()
+	public function get_optionsform_datefields_val( $force_fromMeta = true )
 	{
 		$date_from__from_deal   = strtotime( $this->get( 'date_from' ) );
 		$date_from__from_wcmeta = $this->get_product_meta()['_sale_price_dates_from'][0];
@@ -458,7 +465,7 @@ Class MC_Dotw_Deal {
 		 * Add or remove FALSE to this conditional in order display hide or show the deal's
 		 * backed up original sale dates.
 		 */
-		if ( false && $this->has_product_active_elsewhere() ) {
+		if ( ! $force_fromMeta && $this->has_product_active_elsewhere() ) {
 			$date_from = $date_from__from_deal;
 			$date_to   = $date_to__from_deal;
 		}
@@ -610,19 +617,24 @@ Class MC_Dotw_Deal {
 
 				// Validate array elements as well.
 				if ( $valid_input ) {
-					$valid_input = isset( $val['regular_price'] ) && is_numeric( $val['regular_price'] ) && (int) $val['regular_price'] >= 0
+					$valid_input = isset( $val['regular_price'] ) //&& is_numeric( $val['regular_price'] ) && (int) $val['regular_price'] >= 0
 						? $val
-						: $valid_input;
-					$valid_input = isset( $val['sale_price'] ) && is_numeric( $val['sale_price'] ) && (int) $val['sale_price'] >= 0
+						: false;
+					$valid_input = isset( $val['sale_price'] ) //&& is_numeric( $val['sale_price'] ) && (int) $val['sale_price'] >= 0
 						? $val
-						: $valid_input;
+						: false;
 					$valid_input = isset( $val['date_from'] )
 						? $val
-						: $valid_input;
+						: false;
 					$valid_input = isset( $val['date_to'] )
 						? $val
-						: $valid_input;
+						: false;
 				}
+				break;
+			case 'product':
+				$valid_input = $val instanceof MC_Dotw_Product
+					? $val
+					: $valid_input;
 				break;
 		}
 

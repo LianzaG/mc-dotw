@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 do_action( 'dotw_before_admin_page_display' );
 
-$plugin_slug = MC_Dotw::get_instance()->get_plugin_slug();
+$plugin_slug = $this->plugin_slug;
 ?>
 
 <h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
@@ -50,7 +50,7 @@ $plugin_slug = MC_Dotw::get_instance()->get_plugin_slug();
 								<input type="hidden" name="dotw_deals_form_submitted" value="Y">
 								<div id="accordion">
 									<?php
-									$options = MC_Dotw_Admin::get_instance()->get_options();
+									$options = $this->get_options();
 
 									$nav_links_html = '';
 									$endofweek_offset = $options['settings']['endofweek_offset'];
@@ -98,7 +98,7 @@ $plugin_slug = MC_Dotw::get_instance()->get_plugin_slug();
 											. 	esc_html( $week_num )
 											. '</a>';
 
-										$nav_links_html .= ($i === (MC_Dotw::YEAR_IN_WEEKS - 1))? '' : ' - ';
+										$nav_links_html .= ($i === (MC_Dotw::YEAR_IN_WEEKS - 1)) ? '' : ' - ';
 
 										//Looped item HTML content template: ?>
 										<div>
@@ -117,7 +117,9 @@ $plugin_slug = MC_Dotw::get_instance()->get_plugin_slug();
 															<p class="dotw_deals_option_details">
 																<input type="number" min="0" max="99999" value="<?php esc_html_e( $deal->get( 'hot_price' ) );?>" class="small" name="dotw_deals_<?php esc_attr_e($week_num);?>_hot_price" id="dotw_deals_<?php esc_attr_e($week_num);?>_hot_price" placeholder="<?php esc_html_e( $deal->get( 'sale_price' ) );?>"/><span class="description"> <?php esc_attr_e( 'Hot Deal\'s Price', $plugin_slug ); ?></span><br>
 															</p>
-															<?php include( 'admin-deal-aside-wrapper.php' ); ?>
+															<div id="dotw_deals_<?php esc_attr_e($week_num);?>_aside">
+																<?php echo $this->get_deal_aside_html( $deal ); ?>
+															</div>
 														</td>
 														<td scope="row">
 															<?php

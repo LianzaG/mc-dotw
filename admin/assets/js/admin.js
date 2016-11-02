@@ -2,7 +2,6 @@
 	"use strict";
 
 	$j(function () {
-		console.log('Loadd');
 		/*
 	     * Trigger suggest.js AJAX autocomplete on selected DOM elements:
 	     * autocomplete a week's deal product selection field with suggestions
@@ -22,9 +21,9 @@
 	     */
 	    $j(".dotw_deals_suggest").on('change', function() {
 
-	        var id           = $j( this ).attr( 'id' )
-	          , userInput    = $j( this ).attr( 'value' );
-
+	        var userInput  = $j( this ).attr( 'value' )
+	            , id       = $j( this ).attr( 'id' )
+	        	, week_num = id.match( /(\d+)/g )[0];
 	        /*
 	         * User can type any character to perform the ajax product lookup but,
 	         * once a json response has been selected, the following condition will
@@ -37,6 +36,7 @@
 	              , title        = response.title
 	              , product_id   = response.product_id;
 
+
 	            // We won't store the selection as JSON so, now that the info was retrieved and parsed,
 	            // we can set the value of $j( this ) to the title of the selected product.
 	            $j( this ).attr( 'value', title );
@@ -48,7 +48,12 @@
 	             */
 	            $j.get(
 	    		    ajaxurl,
-	    		    {action: 'dotw_deals_option_meta', title: title},
+	    		    {
+	    		    	action: 'dotw_deals_option_meta',
+	    		    	title: title,
+	    		    	product_id: product_id,
+	    		    	week_num: week_num
+	    		    },
 	    		    function(data) {
 
 	                    data = $j.parseJSON(data);
@@ -59,6 +64,8 @@
 	                    $j('#' + id + "_hot_price").attr( 'placeholder', data.sale_price );
 	                    $j('#' + id + '_date_from').attr('value', data.date_from);
 	                    $j('#' + id + '_date_to').attr('value', data.date_to);
+
+	                    $j('#' + id + '_aside').html(data.aside_html);
 	    		    }
 	    		);
 
@@ -76,8 +83,9 @@
 	                $j('#' + id + '_title' ).addClass( 'muted' );
 	            }
 
-	        }//End if JSON userInput
-	        else if ( '' === userInput || userInput.length == 0 ) {
+	        } else if ( '' === userInput || userInput.length == 0 ) {
+	        	// console.log(id);
+	        	// debugger;
 	            // Reset hidden data field if the deal selection is removed from the input.
 	            $j('#' + id + '_product_id').attr('value', '');
 
@@ -90,10 +98,13 @@
 	            /*
 	             * Update this deal's accordion title to reflect the cleared selection.
 	             */
-	            // >> First insert selection inside the deal's title.
+	            // >> First clear the deal's title.
 	            $j('#' + id + '_title .cur_selection').html( '' );
 	            // >> Then update title anchor's css class to further reflect the deal's state.
 	            $j('#' + id + '_title' ).addClass( 'muted' );
+
+	            // Clear tha aside div.
+	            $j('#' + id + '_aside').html( '' );
 	        }
 
 	    });
