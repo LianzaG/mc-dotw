@@ -147,5 +147,54 @@
 
 	        }
 	    });
+
+	    /**
+	     * Widget admin UI callback.
+	     *
+	     * Triggered when changing the widget's admin form's 'output format' value.
+	     *
+	     * @since 1.0.2
+	     */
+	    $j( '[id^="widget-dotw_widget"][id$="format"]' ).on( 'change', function() {
+	    	// Widget's 'output format' form field and number.
+	    	var sSelectID = $j( this ).attr( 'id' )
+	    	        , num = sSelectID.match( /(\d+)/g )[0];
+
+	    	// Slick Slider's options wrapper div.
+	    	var slickDiv = $j( 'div.widget-dotw_widget-' + num + '-slick-wrapper' ) ;
+
+	    	// Show when slick is selected, hide otherwise.
+	    	if ( 'slick' == $j( this ).val() ) {
+	    		slickDiv.slideDown();
+	    	} else {
+	    		slickDiv.slideUp();
+	    	}
+	    });
 	});
 }(jQuery));
+
+/**
+ * Toggle a widget's admin form 'Slick Layout Settings' section.
+ *
+ * @since   1.0.2
+ *
+ * @param   {string}  id  Numeric string identifying the widget on which to take action.
+ *
+ * @return  {void}
+ */
+function dotwToggleSlickLayout( id ) {
+	$j( '.dotw-widget-admin-toggable-' + id ).toggle();
+}
+
+/**
+ * Toggle a widget's admin form 'Caption Texts Settings' section.
+ *
+ * @since   1.0.2
+ *
+ * @param   {string}  id  Numeric string identifying the widget on which to take action.
+ *
+ * @return  {void}
+ */
+function dotwToggleSlickCaption( id ) {
+	$j( '.dotw-widget-admin-caption-' + id ).toggle();
+}

@@ -17,34 +17,43 @@ Class MC_Dotw_Deal {
 	/**
 	 * Stores the week number.
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 *
-	 * @var int
+	 * @var   int
 	 */
 	protected $_week_num = 0;
 
 	/**
+	 * Stores an array date objects: start/end DateTime + CalendR\Calendar\Week.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @var   array
+	 */
+	protected $calendar = array();
+
+	/**
 	 * Stores the deal's data.
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 *
-	 * @var array
+	 * @var   array
 	 */
 	protected $_data = array();
 
 	/**
 	 * Stores a MC_Dotw_Product instance referencing the deal's product.
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 *
-	 * @var MC_Dotw_Product
+	 * @var   MC_Dotw_Product
 	 */
 	protected $product = null;
 
 	/**
 	 * Constructor for the deal class.
 	 *
-	 * @since   1.0.0
+	 * @since 	  1.0.0
 	 *
 	 * @param     integer    $week_num    (Optional) A number indicating which
 	 *                                    week of the year the deal relates to.
@@ -232,6 +241,12 @@ Class MC_Dotw_Deal {
 
 		} elseif ( isset( $this->_data[$key] ) ){
 			return $this->_data[$key];
+		} elseif ( ! strcmp( $key, 'start' ) ) {
+			return $this->get_start();
+		} elseif ( ! strcmp( $key, 'end' ) ) {
+			return $this->get_end();
+		} elseif ( ! strcmp( $key, 'price' ) ) {
+			return $this->get_price();
 		}
 	}
 
@@ -400,31 +415,89 @@ Class MC_Dotw_Deal {
 	 */
 	public function get_calendar_objects( $_week_num=0 )
 	{
-		$calendar_factory = new CalendR\Calendar;
-		$options = MC_Dotw_Admin::get_instance()->get_options();
+		if ( empty( $this->calendar ) ) {
+			$calendar_factory = new CalendR\Calendar;
+			$options = MC_Dotw_Admin::get_instance()->get_options();
 
-		$week_num = ( 0 === $_week_num ) ? $this->get( 'week_num' ) : (int) $_week_num;
+			$week_num = ( 0 === $_week_num ) ? $this->get( 'week_num' ) : (int) $_week_num;
 
-		$week       = $calendar_factory->getWeek( date('Y'), $week_num );
-		$week_start = $week->getBegin();
-        $week_end   = $week->getEnd();
+			$week       = $calendar_factory->getWeek( date('Y'), $week_num );
+			$week_start = $week->getBegin();
+	        $week_end   = $week->getEnd();
 
-        /*
-	     * From Monday to <endofweek_offset> option:
-	     * Apply the option to remove a few days in order to avoid mentioning days-off (sunday)
-	     * or overlapping on the next week's first day.
-	     */
-	    $week_end->sub(
-	    	date_interval_create_from_date_string(
-	    		$options['settings']['endofweek_offset'] . ' days'
-	    	)
-	    );
+	        /*
+		     * From Monday to <endofweek_offset> option:
+		     * Apply the option to remove a few days in order to avoid mentioning days-off (sunday)
+		     * or overlapping on the next week's first day.
+		     */
+		    $week_end->sub(
+		    	date_interval_create_from_date_string(
+		    		$options['settings']['endofweek_offset'] . ' days'
+		    	)
+		    );
 
-	    return array(
-	    	'week'  => $week,
-	    	'start' => $week_start,
-	    	'end'   => $week_end
-	    );
+		    $this->calendar = array(
+		    	'week'  => $week,
+		    	'start' => $week_start,
+		    	'end'   => $week_end
+		    );
+		}
+
+		return $this->calendar;
+	}
+
+	/**
+	 * Get a DateTime object corresponding to the deal's start date.
+	 *
+	 * @since 	1.0.2
+	 *
+	 * @return  DateTime  The deal's start date.
+	 */
+	public function get_start()
+	{
+		return $this->get_calendar_objects()['start'];
+	}
+
+	/**
+	 * Get a DateTime object corresponding to the deal's end date.
+	 *
+	 * @since 	1.0.2
+	 *
+	 * @return  DateTime  The deal's end date.
+	 */
+	public function get_end()
+	{
+		return $this->get_calendar_objects()['end'];
+	}
+
+	/**
+	 * Reset the calendar property to an empty array.
+	 *
+	 * Useful to free memory, after all date related processing
+	 * has been achieved in a particular function's logic. Makes
+	 * the object lighter for further processing.
+	 *
+	 * @since 	1.0.2
+	 *
+	 * @return  void
+	 */
+	public function clear_calendar()
+	{
+		$this->calendar = array();
+	}
+
+	/**
+	 * Get the deal's final display price.
+	 *
+	 * @return  string  The deal's price.
+	 */
+	public function get_price()
+	{
+		$display_price = $this->get( 'hot_price' ) > 0
+            ? $this->get( 'hot_price' )
+            : $this->get( 'sale_price' );
+
+        return $display_price;
 	}
 
 	/**
@@ -534,7 +607,35 @@ Class MC_Dotw_Deal {
 	 */
 	public function is_current()
 	{
-		return $this->_week_num == date( 'W' );
+		return $this->get( 'week_num' ) == date( 'W' );
+	}
+
+	/**
+	 * Check if a deal's week is in the future.
+	 *
+	 * @since   1.0.2
+	 *
+	 * @param   void
+	 *
+	 * @return  bool  True if the deal has yet to be activated in the future.
+	 */
+	public function is_future()
+	{
+		return $this->get( 'week_num' ) > date( 'W' );
+	}
+
+	/**
+	 * Check if a deal's week is in the past.
+	 *
+	 * @since   1.0.2
+	 *
+	 * @param   void
+	 *
+	 * @return  bool  True if the deal has already been activated during the ongoing year.
+	 */
+	public function is_past()
+	{
+		return $this->get( 'week_num' ) < date( 'W' );
 	}
 
 	/**

@@ -1,1 +1,57 @@
 /* This stylesheet is used to style the public-facing components of the plugin. */
+
+/* --------------------------------- */
+/*             Widget                */
+/* --------------------------------- */
+
+/* Don't squeeze image width! */
+.columns-4 .woocommerce_with_sidebar div.widget_dotw_widget .dotw-w-slick .dotw-w-slicklist .dotw-wide-li ul.products li.product,
+div.widget_dotw_widget .dotw-w-slick .dotw-w-slicklist .dotw-wide-li ul.products li.product,
+.dotw-wide-li ul.products li.product {
+	width: 100% !important;
+}
+
+.slick-slide .woocommerce ul.products {
+	margin: 0;
+}
+
+
+/* Widget - Pricing */
+.dotw-hot-price {
+	color: #fff;
+}
+
+.dotw-reg-price {
+	color: crimson;
+	text-decoration: line-through;
+}
+
+/* Widget - Caption */
+.dotw-slick-caption {
+	font-size: 1.4em;
+	text-align: center;
+}
+
+.dotw-slick-caption-adjust {
+    margin-bottom: -10px;
+}
+
+/* Navigation dots */
+.dotw-w-slick .slick-dots {
+	display: block;
+	position: relative;
+	bottom: 0;
+	width:  100%;
+	text-align: center;
+	border-top: 1px solid rgb(80,80,79);
+	border-top: 1px solid rgba(255,255,255,.25);
+}
+
+.slick-dots li button::before {
+    opacity: .25 !important;
+    color: white !important;
+}
+.slick-dots li.slick-active button:before {
+    opacity: .75 !important;
+    color: white !important;
+}

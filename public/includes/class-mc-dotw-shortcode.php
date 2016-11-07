@@ -23,8 +23,7 @@ class MC_Dotw_Shortcode
         /*
          * Call $plugin_slug from public plugin class.
          */
-        $plugin = MC_Dotw::get_instance();
-        $this->plugin_slug = $plugin->get_plugin_slug();
+        $this->plugin_slug = MC_Dotw::get_instance()->get_plugin_slug();
 
         add_shortcode( 'mc_dotw',               array( $this, 'shortcode' ) );
         add_shortcode( 'dotw_deal_of_the_week', array( $this, 'shortcode' ) );
@@ -44,47 +43,38 @@ class MC_Dotw_Shortcode
      *
      * @return  string        Returns/echoes out the HTML output displaying the deal of the week.
      */
-    public function shortcode( $atts=array() )
+    public function shortcode( $atts = array() )
     {
         $atts = shortcode_atts( array(
             'week_num' => null,
             'skin'     => ''
             ), $atts );
 
-        $deal = apply_filters( 'dotw_shortcode_get_current_deal', new MC_Dotw_Deal( $atts['week_num'] ), $atts );
+        $deal = apply_filters( 'dotw_shortcode_get_current_deal', new MC_Dotw_Deal( (int) $atts['week_num'] ), $atts );
 
         // Switch process if deal is empty.
         if ( $deal->is_blank() ) {
             return apply_filters(
                 'dotw_shortcode_get_blank_deal_html',
-                $this->get_blank_deal_html( $atts['week_num'] ),
+                $this->get_blank_deal_html( (int) $atts['week_num'] ),
                 $deal
             );
         }
 
-        // -- More displayed data references.
-        // Dates data.
-        $calendR_objs  = $deal->get_calendar_objects();
-
-        // Displayed price data.
-        $display_price = $deal->get( 'hot_price' ) > 0
-            ? $deal->get( 'hot_price' )
-            : $deal->get( 'sale_price' );
-
-        $display_price = apply_filters( 'dotw_shortcode_get_display_price', $display_price, $deal );
-
-        // -- Content elements.
-        // Title.
+        // Prepare title.
         $brand = false === strpos( $deal->get( 'title' ), $deal->get( 'product_brand' )->name )
             ? $deal->get( 'product_brand' )->name . ' '
             : '';
 
-        $title = $brand . $deal->get( 'title' ) . ' ' . _x( 'at', 'Price', $this->plugin_slug ) . ' ' . $display_price . '€ ' . _x( 'instead of', 'Sale price', $this->plugin_slug ) . ' ' . $deal->get( 'regular_price' ) . '€';
-        $title = apply_filters( 'dotw_shortcode_title_content', $title, $deal, $display_price );
+        $title = $brand . $deal->get( 'title' ) . ' ' . _x( 'at', 'Price', $this->plugin_slug ) . ' ' . $deal->get( 'price' ) . '€ ' . _x( 'instead of', 'Sale price', $this->plugin_slug ) . ' ' . $deal->get( 'regular_price' ) . '€';
+        $title = apply_filters( 'dotw_shortcode_title_content', $title, $deal );
 
-        // Dates description text
-        $text_dates = _x( 'From ', 'Time period start date' ,$this->plugin_slug ) . ' ' . $calendR_objs['start']->format( 'd' ) . ' ' . _x( 'until', 'Time period end date', $this->plugin_slug ) . ' ' . $calendR_objs['end']->format( 'd F Y' ) ;
-        $text_dates = apply_filters( '', $text_dates, $calendR_objs, $deal );
+        // Prepare dates description text.
+        $text_dates = _x( 'From ', 'Time period start date' ,$this->plugin_slug ) . ' ' . $deal->get( 'start' )->format( 'd' ) . ' ' . _x( 'until', 'Time period end date', $this->plugin_slug ) . ' ' . $deal->get( 'end' )->format( 'd F Y' ) ;
+        $text_dates = apply_filters( '', $text_dates, $deal );
+
+        // Lighter object memory footprint.
+        $deal->clear_calendar();
 
         return do_shortcode(
             '[vc_column_text]<h3>' . esc_html( $title ) . '</h3>[/vc_column_text]'

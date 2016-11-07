@@ -14,7 +14,7 @@
  * Plugin Name:       MC Dotw
  * Plugin URI:
  * Description:       A plugin to create a well-organized WooCommerce products weekly promotions system.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Julien Bosuma
  * Author URI:        http://lianzadesign.com/
  * Text Domain:       mc-dotw
@@ -42,6 +42,11 @@ require_once( plugin_dir_path( __FILE__ ) . '/admin/includes/class-mc-dotw-admin
 require_once( plugin_dir_path( __FILE__ ) . '/admin/includes/class-mc-dotw-admin-wc-custom-fields.php' );
 require_once( plugin_dir_path( __FILE__ ) . '/admin/includes/class-mc-dotw-admin-widget.php' );
 require_once( plugin_dir_path( __FILE__ ) . '/public/includes/class-mc-dotw-shortcode.php' );
+/**
+ * @todo Pass the get_options() method to MC_Dotw instead of calling MC_Dotw_Admin
+ *       Would allow to include MC_Dotw_Admin in the admin conditional, not loading it on front-end.
+ */
+require_once( plugin_dir_path( __FILE__ ) . 'admin/class-mc-dotw-admin.php' );
 
 /*----------------------------------------------------------------------------*
  * Public-Facing Functionality
@@ -74,7 +79,6 @@ add_action( 'plugins_loaded', array( 'MC_Dotw', 'get_instance' ) );
  * The conditional above is intended to give the lightest footprint possible.
  */
 if ( is_admin() ) {
-	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-mc-dotw-admin.php' );
 
 	add_action( 'plugins_loaded', array( 'MC_Dotw_Admin', 'get_instance' ) );
 }

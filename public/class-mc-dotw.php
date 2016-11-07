@@ -28,7 +28,7 @@ class MC_Dotw {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 	/**
 	 * Number of weeks in a year (rounded up).
@@ -85,7 +85,6 @@ class MC_Dotw {
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
 		add_action( 'init', array( $this, 'init_shortcode' ) );
-		// add_filter( '@TODO', array( $this, 'filter_method_name' ) );
 	}
 
 	/**
@@ -151,7 +150,6 @@ class MC_Dotw {
 		} else {
 			self::single_activate();
 		}
-
 	}
 
 	/**
@@ -189,7 +187,6 @@ class MC_Dotw {
 		} else {
 			self::single_deactivate();
 		}
-
 	}
 
 	/**
@@ -208,7 +205,6 @@ class MC_Dotw {
 		switch_to_blog( $blog_id );
 		self::single_activate();
 		restore_current_blog();
-
 	}
 
 	/**
@@ -231,7 +227,6 @@ class MC_Dotw {
 			AND deleted = '0'";
 
 		return $wpdb->get_col( $sql );
-
 	}
 
 	/**
@@ -251,10 +246,14 @@ class MC_Dotw {
 			// Add plugin option.
 			if ( ($option = get_option('mc_dotw')) === false ) {
 				$option = array(
-					"deals"        => MC_Dotw_Deal::get_default_datasets(),
-					"settings"     => array(
-					    "endofweek_offset"            => '1',
-						"isset_wc_product_deals_nums" => '',
+					"deals"        => MC_Dotw_Deal::get_default_datasets(), // Array of deals dataset arrays.
+					"settings"     => array(								// Global settings.
+					    "endofweek_offset"            => '1', 				// Set last day of the week (1 => sunday, 2 => saturday, etc.).
+						"isset_wc_product_deals_nums" => '', 				// Flag for metadata setup.
+						"widget"					  => array( 			// Widget options.
+							"title" 		=> '', 											// Widget's default title.
+							"slick" 		=> MC_Dotw_Widget::get_slick_init_defaults(),   // Slick layout defaults.
+						),
 					),
 					"last_updated" => time(),
 				);
@@ -343,6 +342,16 @@ class MC_Dotw {
 	public function enqueue_styles()
 	{
 		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
+
+		// Slick's CSS.
+		if ( ! wp_style_is( 'slick', 'enqueued' ) ) {
+			// wp_register_style( 'slick', plugins_url( 'assets/js/slick/slick.css', __FILE__ ), array(), self::VERSION, 'all' );
+			wp_register_style( 'slick', '//cdn.jsdelivr.net/jquery.slick/1.5.5/slick.css', array(), self::VERSION, 'all' );
+			wp_enqueue_style( 'slick' );
+
+			wp_register_style( 'slick-theme', '//cdn.jsdelivr.net/jquery.slick/1.5.5/slick-theme.css', array(), self::VERSION, 'all' );
+			wp_enqueue_style( 'slick-theme' );
+		}
 	}
 
 	/**
@@ -352,7 +361,14 @@ class MC_Dotw {
 	 */
 	public function enqueue_scripts()
 	{
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
+		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION, true );
+
+		// Slick.js
+		if ( ! wp_script_is( 'slick', 'enqueued' ) ) {
+			// wp_register_script( 'slick', plugins_url( 'assets/js/slick/slick.min.js', __FILE__ ), array( 'jquery' ), self::VERSION, true );
+			wp_register_script( 'slick', '//cdn.jsdelivr.net/jquery.slick/1.5.5/slick.min.js', array( 'jquery' ), self::VERSION, true );
+			wp_enqueue_script( 'slick' );
+		}
 	}
 
 	/**
@@ -366,5 +382,116 @@ class MC_Dotw {
 	{
 		// require_once( 'includes/class-mc-dotw-shortcode.php' );
 		new MC_Dotw_Shortcode();
+	}
+
+	/**
+	 * Get the objects (or the `$key` attributes) of all non-empty deals, or
+	 * only those of a time-filtered subset of non-empty deals.
+	 *
+	 * @since    1.0.2
+	 *
+	 * @param    string  $key          	(Optional) The object's attribute to return for each deal.
+	 *                                 	The object itself is returned instead, if no argument is passed.
+	 *                                 	Default '' (empty string).
+	 * @param    string  $cardinality  	(Optional) If either 'past' or 'future' is passed as argument,
+	 *                                 	the results will be filtered to only include past or future deals.
+	 *                                 	Default '' (empty string).
+	 * @param    bool    $current      	(Optional) Whether or not to include the current week's deal.
+	 *                                 	Default true.
+	 * @param 	 integer $limit 	   	(Optional) Maximum number of deals to return. Default 0.
+	 *
+	 * @param 	 array 	 $range 		(Optional) Associative array of min. and max. week numbers to observe
+	 *                           		when returning deals: {
+	 *                                 		'week_num_min' => '',
+	 *                                 		'week_num_max' => '',
+	 *                                 	}.
+	 *                                 	Useful when not applying time-filtering (with $cardinality), in order to
+	 *                                 	adjust and center the returned list around the current/desired week.
+	 *
+	 * @return   array                 	Array of either MC_Dotw_Deal objects or appropriate attribute values,
+	 *                                 	if a valid `$key` was supplied.
+	 */
+	public function get_set_deals(
+		$key = '',
+		$cardinality = '',
+		$current = true,
+		$limit = 0,
+		$range = array(
+			'week_num_min' => '',
+			'week_num_max' => '',
+			)
+	) {
+		// Init time-filtered deals containers.
+		$past   = array();
+		$future = array();
+
+		// Conditionals. Set state.
+		$load_past = ! $cardinality || ( 'past' == $cardinality );
+		$load_futr = ! $cardinality || ( 'future' == $cardinality );
+
+		// 1 - Take every deal of the year.
+		foreach ( MC_Dotw_Admin::get_instance()->get_options()['deals'] as $deal_dataset ) {
+			$deal = new MC_Dotw_Deal( $deal_dataset['week_num'] );
+
+			// 2 - If not empty,
+			if ( ! $deal->is_blank() ) {
+				/*
+				 * 3 - Avoid including out-of-range deals if min/max week_nums have been specified
+				 *     using the `$range` argument.
+				 */
+				if(
+					( ! $range['week_num_min'] || $range['week_num_min'] <= $deal->get( 'week_num' ) )
+				 && ( ! $range['week_num_max'] || $range['week_num_max'] >= $deal->get( 'week_num' ) )
+				) {
+					/*
+					 * 4 - See if they fit in any of the past/current/future time-filtered containers.
+					 *
+					 * 5 - Use 'week numbers as keys' for the container arrays being built.
+					 * 6 - If a specific '$key' was requested, load that $key's value.
+					 *     Otherwise, load the deal itself.
+					 */
+					if ( $load_past && $deal->is_past() ) {
+						$past[$deal->get( 'week_num' )] = $key ? $deal->get( $key ) : $deal;
+					}
+
+					if ( $current && $deal->is_current() ) {
+						// No time-filtered container is needed for the current deal (there's only one…).
+						// We'll load `$cur_deal` by itself, below, when populating `$set_deals`.
+						$cur_deal = $key ? $deal->get( $key ) : $deal;
+					}
+
+					if ( $load_futr && $deal->is_future() ) {
+						$future[$deal->get( 'week_num' )] = $key ? $deal->get( $key ) : $deal;
+					}
+				}
+			}
+		}
+
+		// 7a - Results array. Load.
+		$set_deals = array();
+
+		if ( $load_past ) { $set_deals   = $past; }
+		if ( $current )   { $set_deals[$cur_deal->get( 'week_num' )] = $cur_deal; }
+		if ( $load_futr ) { $set_deals   = array_merge( $set_deals, $future ); }
+
+		//  7b - Results array. Show closest deals first when not listing any future deal.
+		if ( ! $load_futr ) {
+			$set_deals = array_reverse( $set_deals );
+		}
+
+		/*
+		 * 8 - Apply $limit if needed.
+		 */
+
+		// Sanitize supplied $limit argument.
+		$limit = MC_Dotw::YEAR_IN_WEEKS < $limit ? MC_Dotw::YEAR_IN_WEEKS : $limit;
+		$limit = 0  > $limit ? 0  : $limit;
+
+		// If there's a max. number of deals specified and exceeded.
+		if ( $limit && count( $set_deals ) > $limit ) {
+			$set_deals = array_chunk( $set_deals, $limit )[0];
+		}
+
+		return $set_deals;
 	}
 }

@@ -212,12 +212,10 @@ Class MC_Dotw_Product {
 	{
 		$filtered = array();
 
-		$deal_matches_condition = $future
-			? (int) $deal['week_num'] > date( 'W' )
-			: (int) $deal['week_num'] < date( 'W' );
-
 		foreach ($this->get_deals() as $deal) {
-			if ( $deal_matches_condition ) {
+			if ( $future && (int) $deal['week_num'] > date( 'W' ) ) {
+				$filtered[] = $deal;
+			} elseif ( (int) $deal['week_num'] < date( 'W' ) ) {
 				$filtered[] = $deal;
 			}
 		}

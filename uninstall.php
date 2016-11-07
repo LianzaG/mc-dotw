@@ -15,7 +15,7 @@ if ( ! current_user_can( 'activate_plugins' ) ) {
 
 // check_admin_referer( 'bulk-plugins' );
 
-// If uninstall not called from WordPress, then exit
+// If uninstall is not called from WordPress, exit!
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }

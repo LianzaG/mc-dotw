@@ -128,7 +128,7 @@ class MC_Dotw_Admin
 		}
 
 		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
+		if ( $this->plugin_screen_hook_suffix == $screen->id || "widgets" === $screen->id  ) {
 			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), MC_Dotw::VERSION );
 		}
 	}
@@ -147,12 +147,15 @@ class MC_Dotw_Admin
 		}
 
 		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_script( 'jquery' );
-            wp_enqueue_script( 'suggest' );
-            wp_enqueue_script( 'jquery-ui-core' );
-            wp_enqueue_script( 'jquery-ui-accordion' );
-            wp_enqueue_script( 'jquery-ui-datepicker' );
+		if ( $this->plugin_screen_hook_suffix == $screen->id || "widgets" === $screen->id ) {
+				wp_enqueue_script( 'jquery' );
+
+			if ( true || $this->plugin_screen_hook_suffix == $screen->id ) {
+	            wp_enqueue_script( 'suggest' );
+	            wp_enqueue_script( 'jquery-ui-core' );
+	            wp_enqueue_script( 'jquery-ui-accordion' );
+	            wp_enqueue_script( 'jquery-ui-datepicker' );
+			}
 
 			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), MC_Dotw::VERSION );
 		}
@@ -188,7 +191,7 @@ class MC_Dotw_Admin
 	}
 
 	/**
-	 * Include the plugin's admin/shared class definitions.
+	 * Init the plugin's admin/shared class definitions.
 	 *
 	 * @since    1.0.0
 	 *
@@ -196,11 +199,6 @@ class MC_Dotw_Admin
 	 */
 	public function init_includes()
 	{
-		// require_once( 'includes/class-mc-dotw-admin-ajax.php' );
-		// require_once( 'includes/class-mc-dotw-admin-cron.php' );
-		// require_once( 'includes/class-mc-dotw-admin-wc-custom-fields.php' );
-		// require_once( 'includes/class-mc-dotw-admin-widget.php' );
-
 		new MC_Dotw_Admin_Ajax();
 		new MC_Dotw_WC_Custom_Fields();
 		$cron = MC_Dotw_Admin_Cron::get_instance();
@@ -300,6 +298,8 @@ class MC_Dotw_Admin
 	            $dotw_options['settings']['endofweek_offset'] = $endofweek_offset ? : $dotw_options['settings']['endofweek_offset'];
 	            $dotw_options['last_updated'] = time();
 
+	            $this->load_submitted_widget_options( $dotw_options );
+
 	            update_option( 'mc_dotw', $dotw_options );
 	        }
 
@@ -307,6 +307,29 @@ class MC_Dotw_Admin
         }
 
         do_action( 'dotw_options_page_before_content_display', $form_submitted );
+	}
+
+	/**
+	 * Get widget default options from $_POST.
+	 *
+	 * @since   1.0.2
+	 *
+	 * @param   array  &$opts  (Required) Reference to the array of plugin's global options.
+	 *
+	 * @return  void           Argument is passed by reference.
+	 */
+	protected function load_submitted_widget_options( &$opts )
+	{
+		if ( isset( $_POST['dotw_deals_widget_slick'] ) ) {
+
+			if ( ! isset( $opts['settings']['widget'] ) ) {
+				$opts['settings']['widget'] = array( 'title' => '', 'slick' => array() );
+			}
+
+			foreach ( $_POST['dotw_deals_widget_slick'] as $slick_key => $val ) {
+				$opts['settings']['widget']['slick'][$slick_key] = esc_attr( $val );
+			}
+		}
 	}
 
 	/**

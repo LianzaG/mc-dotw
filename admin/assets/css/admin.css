@@ -57,11 +57,16 @@ input[type=number] {
     width: 159px;
 }
 
-#dotw_deals_form .ui-accordion-content {
+#mc_dotw_admin_form .ui-accordion-content {
     border: 5px solid;
     background: whitesmoke;
 }
 
 .ui-accordion-header-active {
 	background: whitesmoke;
+}
+
+/* Widget Admin Styles */
+.dotw-hidden {
+	display: none;
 }
