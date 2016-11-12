@@ -24,9 +24,12 @@ if ( 'default' === $instance['format'] ) :
 	echo do_shortcode( '[product id="' . $deal->get( 'product_id' ) . '"]' );
 
 elseif ( 'slick' === $instance['format'] ) :
+	// Set user-defined CSS selectors markup.
+	$css_id    = $instance['css_id']    ? ' id="' . esc_attr( trim( $instance['css_id'], '"\' ' ) ) . '"'       : '';
+	$css_class = $instance['css_class'] ? ' class="' . esc_attr( trim( $instance['css_class'], '"\' ' ) ) . '"' : '';
 	?>
 	<div class="dotw-w-wrapper dotw-w-slick">
-		<div class="dotw-w-slicklist" data-slick='{<?php echo $data_attr; ?>}'>
+		<div class="dotw-w-slicklist"<?php echo esc_html( $css_id ); ?> data-slick='{<?php echo $data_attr; ?>}'>
 			<?php
 			foreach ( $deals as $key => $deal ) :
 				// ----------------------------------
@@ -47,7 +50,7 @@ elseif ( 'slick' === $instance['format'] ) :
 				// HTML output (Caption top/bottom position depends on the instance settings).
 				// ---------------------------------------------------------------------------
 		        ?>
-				<div>
+				<div<?php echo esc_html( $css_id ); ?>>
 					<?php ob_start(); ?>
 
 					<p class="dotw-slick-caption dotw-slick-pricing">

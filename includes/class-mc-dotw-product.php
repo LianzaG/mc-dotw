@@ -82,18 +82,30 @@ Class MC_Dotw_Product {
 	{
 		$options = MC_Dotw_Admin::get_instance()->get_options();
 
-		// Get an array of linked deals week numbers.
-		$product_deal_nums = unserialize( $this->get( 'meta' )['dotw_wc_product_deal_nums'][0] );
+		$meta = $this->get( 'meta' );
 
-		// Set this object's 'delals'
-		foreach ( $product_deal_nums as $deal_num ) {
-			$this->deals[$deal_num] = $options['deals'][$deal_num-1];
-		}
+		// If the plugin's metadata key exists
+		if ( isset( $meta['dotw_wc_product_deal_nums'] ) ) {
+			// Get an array of linked deals week numbers.
+			$product_deal_nums = unserialize( $meta['dotw_wc_product_deal_nums'][0] );
 
-		foreach ( $this->get_deals() as $deal_num => $dataset ) {
-			if ( $dataset['is_active'] === true || $dataset['is_active'] === 'true' ) {
-				$this->active_deal_num = $deal_num;
+			// Set this object's 'delals'
+			foreach ( $product_deal_nums as $deal_num ) {
+				$this->deals[$deal_num] = $options['deals'][$deal_num-1];
 			}
+
+			foreach ( $this->get_deals() as $deal_num => $dataset ) {
+				if ( $dataset['is_active'] === true || $dataset['is_active'] === 'true' ) {
+					$this->active_deal_num = $deal_num;
+				}
+			}
+		} else {
+			/**
+			 * Update missing plugin's metadata key.
+			 *
+			 * @hooked 	MC_Dotw_WC_Custom_Fields->save_dotw_custom_fields().
+			 */
+			do_action( 'dotw_product_instance_update_missing_meta', $this->get_id() );
 		}
 	}
 

@@ -24,7 +24,9 @@ class MC_Dotw_WC_Custom_Fields
     	$this->plugin_slug = MC_Dotw::get_instance()->get_plugin_slug();
 
         add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_dotw_custom_fields' ) );
+        add_action( 'woocommerce_process_product_meta_simple', 			array( $this, 'save_dotw_custom_fields' ) );
         add_action( 'woocommerce_process_product_meta', 				array( $this, 'save_dotw_custom_fields' ) );
+        add_action( 'dotw_product_instance_update_missing_meta',		array( $this, 'save_dotw_custom_fields' ) );
     }
 
     /**
@@ -43,7 +45,9 @@ class MC_Dotw_WC_Custom_Fields
 		// Get the week numbers of all MC_Dotw_Deal's linked to this product.
 		$linked_deals_week_nums = MC_Dotw_Product::get_product_by_id( $post->ID )->get( 'deal_nums' );
 
-		sort( $linked_deals_week_nums, SORT_NUMERIC );
+		if ( ! empty( $linked_deals_week_nums ) ) {
+			sort( $linked_deals_week_nums, SORT_NUMERIC );
+		}
 
 		// Set the [week_nums] custom field's text content.
 		$week_nums_txt = count( $linked_deals_week_nums )
@@ -87,11 +91,13 @@ class MC_Dotw_WC_Custom_Fields
 	 */
     public function save_dotw_custom_fields( $post_id )
     {
-    	do_action(
-    		'dotw_wc_product_save_custom_fields',
-    		$post_id,
-    		$_POST['_dotw_wc_product_deal_nums'],
-    		$_POST
-    	);
+    	// Make sure every product has dotw metadata, (especially newly added ones).
+    	$deal_nums = get_post_meta( $post_id, 'dotw_wc_product_deal_nums', true );
+
+    	if ( empty ( $deal_nums ) || ! $deal_nums ) {
+    		update_post_meta( $post_id, 'dotw_wc_product_deal_nums', array() );
+    	}
+
+    	do_action( 'dotw_wc_product_save_custom_fields', $post_id );
     }
 }

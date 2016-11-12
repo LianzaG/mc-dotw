@@ -28,7 +28,7 @@ class MC_Dotw {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.0.2';
+	const VERSION = '1.0.3';
 
 	/**
 	 * Number of weeks in a year (rounded up).
@@ -85,6 +85,9 @@ class MC_Dotw {
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
 		add_action( 'init', array( $this, 'init_shortcode' ) );
+		add_action('dotw_after_admin_options_save', array( $this, 'generate_dynamic_css' ));
+
+		$opt = get_option('mc_dotw');
 	}
 
 	/**
@@ -335,12 +338,52 @@ class MC_Dotw {
 	}
 
 	/**
+	 * Checks if css folder is writable.
+	 *
+	 * @since 	1.0.3
+	 * @uses 	is_writable()
+	 *
+	 * @todo Fix file permissions. So far, this function always returns false.
+	 *
+	 * @return 	bool
+	 */
+	protected function is_css_folder_writable()
+	{
+		$css_dir = plugins_url( 'assets/css', __FILE__ );
+
+		return is_writable($css_dir);
+	}
+
+	/**
+	 * Gets content of dynamic assets files and puts it in static ones.
+	 *
+	 * @todo Avoid resorting to $GLOBALS to pass values to the included file.
+	 *
+	 * @since    1.0.3
+	 *
+	 * @return   void
+	 */
+	public function generate_dynamic_css()
+	{
+		if( true || $this->is_css_folder_writable() ) {
+			$css_dir = DOTW_ROOT . '/public/assets/css/';
+			$plugin_options = MC_Dotw_Admin::get_instance()->get_options();
+
+			ob_start();
+			include_once( DOTW_ROOT . '/public/assets/css/public-css.php');
+			$css = ob_get_clean();
+			file_put_contents( $css_dir . 'public.css', $css, LOCK_EX );
+		}
+	}
+
+	/**
 	 * Register and enqueue public-facing style sheet.
 	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles()
 	{
+		// Use dynamic css if needed.
 		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
 
 		// Slick's CSS.

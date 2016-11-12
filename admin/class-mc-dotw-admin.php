@@ -301,7 +301,10 @@ class MC_Dotw_Admin
 	            $this->load_submitted_widget_options( $dotw_options );
 
 	            update_option( 'mc_dotw', $dotw_options );
+
+        		do_action( 'dotw_after_admin_options_save' );
 	        }
+
 
 	        return $dotw_options['deals'];
         }

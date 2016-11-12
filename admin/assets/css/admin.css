@@ -65,8 +65,13 @@ input[type=number] {
 .ui-accordion-header-active {
 	background: whitesmoke;
 }
+.ui-accordion-content.ui-helper-reset.ui-widget-content.ui-corner-bottom.ui-accordion-content-active {
+	height: 100% !important;
+}
 
 /* Widget Admin Styles */
 .dotw-hidden {
 	display: none;
 }
+
+

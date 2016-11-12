@@ -1,4 +1,8 @@
-<?php ?>
+<?php
+/* --------------------- */
+/*     Main Settings     */
+/* --------------------- */
+?>
 <p>
 	<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', $this->plugin_slug ); ?></label>
 	<input type="text" class="widefat" id="<?php echo esc_attr( $this->get_field_id('title') ); ?>" name="<?php echo esc_attr( $this->get_field_name('title') ); ?>" value="<?php echo esc_attr($title); ?>"/>
@@ -9,10 +13,16 @@
 		<option value="default" <?php selected( 'default', $instance['format'] ); ?>><?php _e( 'Default', $this->plugin_slug ); ?></option>
 		<option value="slick" <?php selected( 'slick', $instance['format'] ); ?>><?php _e( 'Slick Slider', $this->plugin_slug ); ?></option>
 	</select>
-</p>
+</p><?php
+/* --------------------- */
+/*    Slick Settings     */
+/* --------------------- */ ?>
 <div class="widget-dotw_widget-<?php echo esc_attr( $this->number ); ?>-slick-wrapper"<?php echo 'slick' == $instance['format'] ? '': ' style="display:none;"';?>>
 	<hr>
-	<div>
+	<div><?php
+        /* ---------------------------- */
+        /*    Slick - Main Settings     */
+        /* ---------------------------- */ ?>
 		<h4><?php _e( 'Slick Slider - Main params', $this->plugin_slug ); ?></h4>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'period' ) ); ?>" title="<?php _e( 'Select which deals to show.', $this->plugin_slug ); ?>"><?php echo _x( 'Promotion timeframe:', 'WidgetFields - SelectionPeriod', $this->plugin_slug ); ?></label>
@@ -38,20 +48,45 @@
 			<input type="radio" value="yes" <?php checked( 'yes', $instance['show_current'] ); ?> name="<?php echo esc_attr( $this->get_field_name( 'show_current' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'show_current' ) ); ?>"> <label for="<?php echo esc_attr( $this->get_field_id( 'show_current' ) ); ?>"> <?php _e( 'Yes', $this->plugin_slug ); ?></label>
 			<input type="radio" value="" <?php checked( '', $instance['show_current'] ); ?> name="<?php echo esc_attr( $this->get_field_name( 'show_current' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'show_current' ) . '-2' ); ?>"> <label for="<?php echo esc_attr( $this->get_field_id( 'show_current' ) . '-2' ); ?>"> <?php _e( 'No', $this->plugin_slug ); ?></label>
 		</p>
-	</div>
+	</div><?php
+        /* ---------------------------- */
+        /*     Slick - More Options     */
+        /* ---------------------------- */ ?>
 	<hr>
 	<h5><?php _e( 'Show more/less options:', $this->plugin_slug ); ?></h5>
 	<input type="button" onclick="dotwToggleSlickLayout(<?php echo esc_attr( $this->number ); ?>)" value="<?php _e( 'Layout Options', $this->plugin_slug ); ?>">
-	<input type="button" onclick="dotwToggleSlickCaption(<?php echo esc_attr( $this->number ); ?>)" value="<?php _e( 'Caption Options', $this->plugin_slug ); ?>"><br>
+	<input type="button" onclick="dotwToggleSlickCaption(<?php echo esc_attr( $this->number ); ?>)" value="<?php _e( 'Caption Options', $this->plugin_slug ); ?>">
+	<input type="button" onclick="dotwToggleSlickCss(<?php echo esc_attr( $this->number ); ?>)" value="<?php _e( 'CSS Options', $this->plugin_slug ); ?>"><br>
 	<hr>
-	<div class="dotw-widget-admin-caption-<?php echo esc_attr( $this->number );?>" style="display:none;">
+	<div class="dotw-widget-admin-caption-<?php echo esc_attr( $this->number );?>" style="display:none;"><?php
+        /* ---------------------------- */
+        /*   Slick - Caption Settings   */
+        /* ---------------------------- */ ?>
 		<h4 class="dotw-slick-setup-title"><?php _e( 'Slick Slider - Caption Texts Params', $this->plugin_slug ); ?></h4>
 		<input type="checkbox" value="top" <?php checked( 'top', $instance['pos_timing'] ); ?> name="<?php echo esc_attr( $this->get_field_name( 'pos_timing' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'pos_timing' ) ); ?>"> <label for="<?php echo esc_attr( $this->get_field_id( 'pos_timing' ) ); ?>"><?php _e( 'Display dates above product.', $this->plugin_slug ); ?></label><br>
 		<input type="checkbox" value="top" <?php checked( 'top', $instance['pos_pricing'] ); ?> name="<?php echo esc_attr( $this->get_field_name( 'pos_pricing' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'pos_pricing' ) ); ?>"> <label for="<?php echo esc_attr( $this->get_field_id( 'pos_pricing' ) ); ?>"><?php _e( 'Display pricing above product', $this->plugin_slug ); ?></label><br>
 		<input type="checkbox" value="yes" <?php checked( 'yes', $instance['flip_caption'] ); ?> name="<?php echo esc_attr( $this->get_field_name( 'flip_caption' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'flip_caption' ) ); ?>"> <label for="<?php echo esc_attr( $this->get_field_id( 'flip_caption' ) ); ?>"><?php _e( 'Display dates above prices', $this->plugin_slug ); ?></label>
 		<hr>
 	</div>
-	<div class="dotw-widget-admin-toggable-<?php echo esc_attr( $this->number );?>" style="display:none;">
+	<div class="dotw-widget-admin-css-<?php echo esc_attr( $this->number );?>" style="display:none;"><?php
+        /* ---------------------------- */
+        /*     Slick - CSS Settings     */
+        /* ---------------------------- */ ?>
+        <h4 class="dotw-slick-setup-title"><?php _e( 'Slick Slider - CSS Selectors', $this->plugin_slug ); ?></h4>
+        <p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'css_class' ) ); ?>"><?php _e( 'Custom CSS Class:', $this->plugin_slug ); ?></label>
+			<input type="text" class="widefat" id="<?php echo esc_attr( $this->get_field_id('css_class') ); ?>" name="<?php echo esc_attr( $this->get_field_name('css_class') ); ?>" value="<?php echo esc_attr($instance['css_class']); ?>"/>
+		</p>
+		<p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'css_id' ) ); ?>"><?php _e( 'Custom CSS ID:', $this->plugin_slug ); ?></label>
+			<input type="text" class="widefat" id="<?php echo esc_attr( $this->get_field_id('css_id') ); ?>" name="<?php echo esc_attr( $this->get_field_name('css_id') ); ?>" value="<?php echo esc_attr($instance['css_id']); ?>"/>
+		</p>
+		<hr>
+    </div>
+	<div class="dotw-widget-admin-toggable-<?php echo esc_attr( $this->number );?>" style="display:none;"><?php
+        /* ---------------------------- */
+        /*    Slick - Layout Settings   */
+        /* ---------------------------- */ ?>
 		<h4 class="dotw-slick-setup-title"><?php _e( 'Slick Slider - Layout Params', $this->plugin_slug ); ?></h4>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'dots' ) ); ?>" title="<?php _e( 'Show dot indicators', $this->plugin_slug ); ?>"><?php _e( 'Dots:', $this->plugin_slug ); ?></label>

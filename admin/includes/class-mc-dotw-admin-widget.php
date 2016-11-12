@@ -187,6 +187,26 @@ class MC_Dotw_Widget extends WP_Widget
             'rtl'               => 'false',         // Change the slider's direction to become right-to-left.
             'waitForAnimate'    => 'true',          // Ignores requests to advance the slide while animating.
             'touchThreshold'    => '5',             // To advance slides, the user must swipe a length of (1/touchThreshold) * the width of the slider.
+
+            'css_reg_price_decoration'          => 'line-through',
+            'css_caption_bg_color'              => '',
+            'css_caption_align'                 => 'center',
+            'css_caption_font_size'             => '1.4em',
+            'css_caption_txt_color'             => '#cccccc',
+            'css_pricing_font_size'             => '',
+            'css_hot_price_color'               => '#ffffff',
+            'css_reg_price_color'               => 'crimson',
+            'css_dots_border_top_width'         => '1',
+            'css_dots_border_top_opacity'       => '0.25',
+            'css_dots_border_top_color'         => '#ffffff',
+            'css_dots_border_top_texture'       => 'solid',
+            'css_dots_bottom_dist'              => '0',
+            'css_dots_bg_color'                 => '',
+            'css_dots_active_opacity'           => '0.75',
+            'css_dots_active_color'             => '#ffffff',
+            'css_dots_inactive_opacity'         => '0.25',
+            'css_dots_inactive_color'           => '#ffffff',
+            'css_img_width'                     => '100',
         );
     }
 
@@ -202,7 +222,17 @@ class MC_Dotw_Widget extends WP_Widget
         $options = MC_Dotw_Admin::get_instance()->get_options();
         $slick   = $options['settings']['widget']['slick'];
 
-        return array(
+        $hard_coded = array(
+            /**
+             * @todo Delete following keys. Not needed here since they're set by
+             * $this->get_slick_init_defaults()… upon plugin activation.
+             *
+             * The only thing is that those field are not offered for edition on the
+             * admin page. Those hard-coded defaults are thus only set once, programmatically!
+             *
+             * Future plugin releases may want to offer the possibility to edit those defaults
+             * from the admin page as well…
+             */
             'title'             => '',
             'format'            => 'default',
             'limit'             => '0',
@@ -213,38 +243,12 @@ class MC_Dotw_Widget extends WP_Widget
             'flip_caption'      => '',
             'week_num_min'      => '',
             'week_num_max'      => '',
-
-            'dots'              => $slick['dots'],
-            'dotsClass'         => $slick['dotsClass'],
-            'draggable'         => $slick['draggable'],
-            'fade'              => $slick['fade'],
-            'infinite'          => $slick['infinite'] ,
-            'initialSlide'      => $slick['initialSlide'],
-            'speed'             => $slick['speed'],
-            'slidesToShow'      => $slick['slidesToShow'],
-            'slidesToScroll'    => $slick['slidesToScroll'],
-            'centerMode'        => $slick['centerMode'] ,
-            'centerPadding'     => $slick['centerPadding'],
-            'autoplay'          => $slick['autoplay'] ,
-            'autoplaySpeed'     => $slick['autoplaySpeed'],
-            'arrows'            => $slick['arrows'],
-            'variableWidth'     => $slick['variableWidth'],
-            'lazyload'          => $slick['lazyload'],
-            'vertical'          => $slick['vertical'],
-            'verticalSwiping'   => $slick['verticalSwiping'],
-            'zIndex'            => $slick['zIndex'],
-            'adaptiveHeight'    => $slick['adaptiveHeight'],
-            'pauseOnHover'      => $slick['pauseOnHover'],
-            'pauseOnDotsHover'  => $slick['pauseOnDotsHover'],
-            'respondTo'         => $slick['respondTo'],
-            'rows'              => $slick['rows'],
-            'slidesPerRow'      => $slick['slidesPerRow'],
-            'useCss'            => $slick['useCss'],
-            'useTransform'      => $slick['useTransform'],
-            'rtl'               => $slick['rtl'],
-            'waitForAnimate'    => $slick['waitForAnimate'],
-            'touchThreshold'    => $slick['touchThreshold'],
+            // End todo.
+            'css_class'         => '', // Widget-level default: User-defined CSS selector.
+            'css_id'            => '', // Widget-level default: User-defined CSS selector.
         );
+
+        return array_merge( $hard_coded, $slick );
     }
 
     /**

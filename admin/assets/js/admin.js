@@ -184,6 +184,7 @@
  */
 function dotwToggleSlickLayout( id ) {
 	$j( '.dotw-widget-admin-toggable-' + id ).toggle();
+
 }
 
 /**
@@ -197,4 +198,17 @@ function dotwToggleSlickLayout( id ) {
  */
 function dotwToggleSlickCaption( id ) {
 	$j( '.dotw-widget-admin-caption-' + id ).toggle();
+}
+
+/**
+ * Toggle a widget's admin form 'CSS Settings' section.
+ *
+ * @since   1.0.3
+ *
+ * @param   {string}  id  Numeric string identifying the widget on which to take action.
+ *
+ * @return  {void}
+ */
+function dotwToggleSlickCss( id ) {
+	$j( '.dotw-widget-admin-css-' + id ).toggle();
 }
